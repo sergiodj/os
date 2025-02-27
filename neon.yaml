@@ -9,6 +9,9 @@ package:
     cpu: 32
     memory: 24Gi
 
+vars:
+  pgsql-supported-versions: "14 15 16 17"
+
 environment:
   contents:
     packages:
@@ -65,9 +68,12 @@ pipeline:
       # neon where to find the postgres binaries.
       # POSTGRES_DISTRIB_DIR=/usr/libexec
       mkdir -p "${{targets.destdir}}"/usr/libexec/neon
-      mv pg_install/v14 "${{targets.destdir}}"/usr/libexec/neon/v14
-      mv pg_install/v15 "${{targets.destdir}}"/usr/libexec/neon/v15
-      mv pg_install/v16 "${{targets.destdir}}"/usr/libexec/neon/v16
+      mkdir -p "${{targets.destdir}}"/etc/ld.so.conf.d
+
+      for ver in ${{vars.pgsql-supported-versions}}; do
+        mv "pg_install/v${ver}" "${{targets.destdir}}/usr/libexec/neon/v${ver}"
+        echo "/usr/libexec/neon/v${ver}" >> "${{targets.destdir}}"/etc/ld.so.conf.d/neon.conf
+      done
 
   - uses: strip
 
