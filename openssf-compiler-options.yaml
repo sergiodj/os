@@ -43,14 +43,36 @@ test:
   environment:
     contents:
       packages:
+        - clang-15
+        - clang-16
+        - clang-17
         - clang-18
+        - clang-19
+        - clang-20
         - gcc
         - gcc-11
         - gcc-12
+        - gcc-13
+        - gcc-14
   pipeline:
     - uses: test/compiler/hardening-check
       with:
+        cc: clang-15
+    - uses: test/compiler/hardening-check
+      with:
+        cc: clang-16
+    - uses: test/compiler/hardening-check
+      with:
+        cc: clang-17
+    - uses: test/compiler/hardening-check
+      with:
         cc: clang-18
+    - uses: test/compiler/hardening-check
+      with:
+        cc: clang-19
+    - uses: test/compiler/hardening-check
+      with:
+        cc: clang-20
     - uses: test/compiler/hardening-check
       with:
         cc: gcc
@@ -60,6 +82,12 @@ test:
     - uses: test/compiler/hardening-check
       with:
         cc: gcc-12
+    - uses: test/compiler/hardening-check
+      with:
+        cc: gcc-13
+    - uses: test/compiler/hardening-check
+      with:
+        cc: gcc-14
     - name: Ensure gcc_s is linked
       runs: |
         touch foo.c
